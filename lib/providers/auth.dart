@@ -66,6 +66,9 @@ class Auth with ChangeNotifier {
     try {
       final response = await http.post(
         url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: json.encode(
           {
             'name': name,
@@ -74,25 +77,33 @@ class Auth with ChangeNotifier {
             'profile': profile,
             'telp': telp,
             'pin': pin,
-            'jk': jk,
+            'Jk': jk,
           },
         ),
       );
-      final responseData = json.decode(response.body);
-      if (responseData['errors'] != null) {
-        throw HttpException(responseData['errors']);
-      }
-      _jwtToken = responseData["data"]["token"];
-      _id = responseData["data"]["id"];
-      _name = responseData["data"]["name"];
-      _email = responseData["data"]["email"];
-      _profile = responseData["data"]["profile"];
-      _telp = responseData["data"]["telp"];
-      _pin = responseData["data"]["pin"];
-      _jk = responseData["data"]["jk"];
 
-      print(json.decode(response.body));
-      notifyListeners();
+      final responseData = json.decode(response.body);
+
+      if (response.statusCode == 201) {
+        _jwtToken = responseData["data"]["token"];
+        _id = responseData["data"]["id"];
+        _name = responseData["data"]["name"];
+        _email = responseData["data"]["email"];
+        _profile = responseData["data"]["profile"];
+        _telp = responseData["data"]["telp"];
+        _pin = responseData["data"]["pin"];
+        _jk = responseData["data"]["jk"];
+
+        print(json.decode(response.body));
+        notifyListeners();
+      } else {
+        // Check if the error response contains 'errors' field
+        if (responseData['errors'] != null) {
+          throw HttpException(responseData['errors'].toString());
+        } else {
+          throw HttpException('An error occurred. Please try again later.');
+        }
+      }
     } catch (error) {
       throw error;
     }
