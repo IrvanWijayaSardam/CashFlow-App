@@ -25,7 +25,7 @@ class TransactionsGrid extends StatelessWidget {
       ),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 1,
-          childAspectRatio: 3 / 1,
+          childAspectRatio: 4 / 1,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10),
     );

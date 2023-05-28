@@ -37,20 +37,28 @@ class TransactionItem extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 8.0),
-              Image.network(
-                "https://api.duniagames.co.id/api/content/upload/file/3938980811652179565.jpg",
-                width: 20.0,
-                height: 20.0,
-                fit: BoxFit.cover,
-              ),
-              SizedBox(height: 8.0),
-              Text(
-                transaction.transactionValue.toString(),
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
-                ),
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image.network(
+                    "https://api.duniagames.co.id/api/content/upload/file/3938980811652179565.jpg",
+                    width: 20.0,
+                    height: 20.0,
+                    fit: BoxFit.cover,
+                  ),
+                  SizedBox(height: 8.0),
+                  Expanded(
+                    child: Text(
+                      transaction.transactionValue.toString(),
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),

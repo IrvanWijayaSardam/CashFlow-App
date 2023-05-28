@@ -25,6 +25,20 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  String get name {
+    if (_name != null) {
+      return _name;
+    }
+    return null;
+  }
+
+  int get userId {
+    if (_id != null) {
+      return _id;
+    }
+    return null;
+  }
+
   Future<void> _authenticate(String email, String password) async {
     final url = Uri.parse('http://157.245.55.214:8001/api/auth/login');
     try {

@@ -1,8 +1,11 @@
-import 'package:cashflow/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './screens/auth_screen.dart';
+import './screens/user_transaction_screen.dart';
+import './screens/home_screen.dart';
+import './screens/edit_transaction_screen.dart';
+
 
 import './providers/auth.dart';
 import './providers/transactions.dart';
@@ -20,6 +23,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, Transactions>(
           update: (ctx, auth, previousTransactions) => Transactions(
               auth.jwtToken,
+              auth.userId,
               previousTransactions == null ? [] : previousTransactions.items),
         ),
       ],
@@ -27,13 +31,15 @@ class MyApp extends StatelessWidget {
         builder: (ctx, auth, _) => MaterialApp(
           title: 'CashFlow',
           theme: ThemeData(
-            primarySwatch: Colors.purple,
+            primarySwatch: Colors.green,
             accentColor: Colors.deepOrange,
             fontFamily: 'Lato',
           ),
           home: auth.isAuth ? HomeScreen() : AuthScreen(),
           routes: {
             HomeScreen.routeName: (ctx) => HomeScreen(),
+            UserTransactionsScreen.routeName : (ctx) => UserTransactionsScreen(),
+            EditTransactionScreen.routeName : (ctx) => EditTransactionScreen(),
           },
         ),
       ),
