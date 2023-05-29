@@ -95,8 +95,8 @@ class Transactions with ChangeNotifier {
   }
 
   Future<void> _updateTransaction(int id, Transaction newTransaction) async {
-    final prodIndex = _items.indexWhere((prod) => prod.id == id);
-    if (prodIndex >= 0) {
+    final trxIndex = _items.indexWhere((prod) => prod.id == id);
+    if (trxIndex >= 0) {
       final url = 'http://157.245.55.214:8001/api/transaction/';
       try {
         final response = await http.put(
@@ -116,7 +116,7 @@ class Transactions with ChangeNotifier {
             },
           ),
         );
-        _items[prodIndex] = newTransaction;
+        _items[trxIndex] = newTransaction;
         final responseData = json.decode(response.body);
         if (response.statusCode == 200) {
           print(json.decode(response.body));
@@ -138,6 +138,23 @@ class Transactions with ChangeNotifier {
     }
   }
 
+  Future<void> _deleteTransactions(int id) async {
+    final url = 'http://157.245.55.214:8001/api/transaction/$id';
+    final existingTrxIndex = _items.indexWhere((trx) => trx.id == id);
+    var existingTrx = _items[existingTrxIndex];
+    _items.removeAt(existingTrxIndex);
+    notifyListeners();
+    final response = await http.delete(url, headers: {
+      'Authorization': jwtToken,
+    });
+    if (response.statusCode >= 400) {
+      _items.insert(existingTrxIndex, existingTrx);
+      notifyListeners();
+      throw HttpException('Could not delete product');
+    }
+    existingTrx = null;
+  }
+
   Future<void> createTransaction(String transactionType, String date,
       int trxValue, String description) async {
     return _createTransaksi(transactionType, date, trxValue, description);
@@ -145,5 +162,9 @@ class Transactions with ChangeNotifier {
 
   Future<void> updateTransaction(int id, Transaction) async {
     return _updateTransaction(id, Transaction);
+  }
+
+  Future<void> deleteTransaction(int id) async {
+    return _deleteTransactions(id);
   }
 }

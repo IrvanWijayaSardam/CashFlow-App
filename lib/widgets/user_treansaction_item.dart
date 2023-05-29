@@ -37,21 +37,21 @@ class UserTransactionItem extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(Icons.delete),
-              // onPressed: () async {
-              //   try {
-              //     await Provider.of<Transactions>(context, listen: false)
-              //         .deleteProduct(id);
-              //   } catch (error) {
-              //     scaffoldMsg.showSnackBar(
-              //       SnackBar(
-              //         content: Text(
-              //           'Deleting failed!',
-              //           textAlign: TextAlign.center,
-              //         ),
-              //       ),
-              //     );
-              //   }
-              // },
+              onPressed: () async {
+                try {
+                  await Provider.of<Transactions>(context, listen: false)
+                      .deleteTransaction(id);
+                } catch (error) {
+                  scaffoldMsg.showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Deleting failed!',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                }
+              },
               color: Theme.of(context).errorColor,
             ),
           ],
