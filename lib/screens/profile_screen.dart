@@ -57,21 +57,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Consumer<Auth>(builder: (ctx, auth, _) => 
                           Text(
-                            'Title',
+                            auth.name ?? '',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18.0,
                             ),
-                          ),
+                          )),
                           SizedBox(height: 5),
+                          Consumer<Auth>(builder: (ctx, auth, _) => 
                           Text(
-                            'Subtitle',
+                            auth.telp ?? '',
                             style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
                             ),
-                          ),
+                          )),
                         ],
                       ),
                     ),

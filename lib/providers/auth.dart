@@ -32,6 +32,13 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+String get telp {
+    if (_telp != null) {
+      return _telp;
+    }
+    return null;
+  }
+
   int get userId {
     if (_id != null) {
       return _id;
