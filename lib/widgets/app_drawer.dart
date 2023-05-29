@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../screens/home_screen.dart';
 import '../screens/edit_transaction_screen.dart';
+import '../screens/profile_screen.dart';
+
 
 class AppDrawer extends StatelessWidget {
   final String drawerTitle;
@@ -55,7 +57,7 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.person),
             title: Text('Manage Profile'),
             onTap: () {
-              // Navigator.of(context).pushReplacementNamed(UserProductsScreen.routeName);
+              Navigator.of(context).pushReplacementNamed(ProfileScreen.routeName);
             },
           ),
           Divider(),

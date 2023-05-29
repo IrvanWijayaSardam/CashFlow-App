@@ -5,6 +5,7 @@ import './screens/auth_screen.dart';
 import './screens/user_transaction_screen.dart';
 import './screens/home_screen.dart';
 import './screens/edit_transaction_screen.dart';
+import './screens/profile_screen.dart';
 
 
 import './providers/auth.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
             HomeScreen.routeName: (ctx) => HomeScreen(),
             UserTransactionsScreen.routeName : (ctx) => UserTransactionsScreen(),
             EditTransactionScreen.routeName : (ctx) => EditTransactionScreen(),
+            ProfileScreen.routeName : (ctx) => ProfileScreen(),
           },
         ),
       ),

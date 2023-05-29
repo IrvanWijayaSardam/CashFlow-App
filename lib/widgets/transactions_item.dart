@@ -29,11 +29,17 @@ class TransactionItem extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    transaction.description,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
+                  Container(
+                    width: 185, // Set the desired width
+                    child: Text(
+                      transaction.description,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      textAlign: TextAlign.right,
                     ),
                   ),
                 ],
@@ -51,7 +57,9 @@ class TransactionItem extends StatelessWidget {
                   SizedBox(height: 8.0),
                   Expanded(
                     child: Text(
-                      transaction.transactionType.toString() == "1" ? " Uang Masuk +${Utils.formatCurrency(transaction.transactionValue)}" : "Uang Keluar -${Utils.formatCurrency(transaction.transactionValue)}",
+                      transaction.transactionType.toString() == "1"
+                          ? " Uang Masuk +${Utils.formatCurrency(transaction.transactionValue)}"
+                          : "Uang Keluar -${Utils.formatCurrency(transaction.transactionValue)}",
                       textAlign: TextAlign.end,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,

@@ -82,8 +82,31 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
       _isLoading = true;
     });
     if (_editedTrx.id != null) {
+      try {
         await Provider.of<Transactions>(context, listen: false)
             .updateTransaction(_editedTrx.id, _editedTrx);
+      } catch (error) {
+        await showDialog<Null>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('An error occured!'),
+            content: Text('Oops, Terjadi Kesalahan Silahkan Periksa Lagi !'),
+            actions: <Widget>[
+              ElevatedButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              )
+            ],
+          ),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context).pop();
+      }
     } else {
       try {
         print('Masuk Create');
@@ -115,10 +138,6 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
         Navigator.of(context).pop();
       }
     }
-    setState(() {
-      _isLoading = false;
-      Navigator.of(context).pop();
-    });
   }
 
   @override
