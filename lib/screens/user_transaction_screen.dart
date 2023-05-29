@@ -50,6 +50,7 @@ class UserTransactionsScreen extends StatelessWidget {
                     trxData.items[i].transactionType,
                     trxData.items[i].date,
                     trxData.items[i].transactionValue,
+                    trxData.items[i].description,
                   ),
                   Divider(),
                 ],

@@ -29,7 +29,7 @@ class TransactionItem extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    transaction.transactionType,
+                    transaction.description,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -49,7 +49,7 @@ class TransactionItem extends StatelessWidget {
                   SizedBox(height: 8.0),
                   Expanded(
                     child: Text(
-                      transaction.transactionValue.toString(),
+                      transaction.transactionType.toString() == "1" ? "+${transaction.transactionValue.toString()}" : "-${transaction.transactionValue.toString()}",
                       textAlign: TextAlign.end,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,

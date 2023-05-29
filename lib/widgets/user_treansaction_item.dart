@@ -10,17 +10,18 @@ class UserTransactionItem extends StatelessWidget {
   final String transactionType;
   final String date;
   final int transactionValue;
+  final String description;
 
   UserTransactionItem(this.id, this.userId, this.transactionType, this.date,
-      this.transactionValue);
+      this.transactionValue,this.description);
 
   @override
   Widget build(BuildContext context) {
     final scaffoldMsg = ScaffoldMessenger.of(context);
 
     return ListTile(
-      title: Text(transactionType),
-      subtitle: Text('Transaction Value: $transactionValue'), // Add this line
+      title: Text(description),
+      subtitle: Text(transactionType.toString() == "1" ? "Transaction Value: +${transactionValue.toString()}" : "Transaction Value: -${transactionValue.toString()}"), // Add this line
       trailing: Container(
         width: 100,
         child: Row(

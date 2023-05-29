@@ -8,6 +8,7 @@ class Transaction with ChangeNotifier {
   final String transactionType;
   final String date;
   final int transactionValue;
+  final String description;
 
   Transaction({
     @required this.id,
@@ -15,5 +16,6 @@ class Transaction with ChangeNotifier {
     @required this.transactionType,
     @required this.date,
     @required this.transactionValue,
+    @required this.description
   });
 }

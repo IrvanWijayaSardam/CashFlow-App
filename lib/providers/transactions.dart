@@ -19,7 +19,7 @@ class Transactions with ChangeNotifier {
     return [..._items];
   }
 
-  Transaction findById(int id){
+  Transaction findById(int id) {
     return _items.firstWhere((trx) => trx.id == id);
   }
 
@@ -46,6 +46,7 @@ class Transactions with ChangeNotifier {
           transactionType: trxData['transaction_type'],
           date: trxData['date'],
           transactionValue: trxData['transaction_value'],
+          description: trxData['description'],
         ));
       });
       _items = loadedTransactions;
@@ -56,27 +57,27 @@ class Transactions with ChangeNotifier {
   }
 
   Future<void> _createTransaksi(
-    String transactionType, String date, int trxValue) async {
-  final url = Uri.parse('http://157.245.55.214:8001/api/transaction');
-  try {
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': jwtToken,
-      },
-      body: json.encode(
-        {
-          'userid': userId,
-          'trxtype': transactionType,
-          'date': date,
-          'trxvalue': trxValue,
+      String transactionType, String date, int trxValue,String description) async {
+    final url = Uri.parse('http://157.245.55.214:8001/api/transaction/');
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': jwtToken,
         },
-      ),
-    );
+        body: json.encode(
+          {
+            'userid': userId,
+            'trxtype': transactionType,
+            'date': date,
+            'trxvalue': trxValue,
+            'description':description,
+          },
+        ),
+      );
 
       final responseData = json.decode(response.body);
-
       if (response.statusCode == 201) {
         print(json.decode(response.body));
         notifyListeners();
@@ -96,8 +97,7 @@ class Transactions with ChangeNotifier {
   Future<void> updateTransactions(int id, Transaction newTransaction) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      final url =
-          'http://157.245.55.214:8001/api/transaction';
+      final url = 'http://157.245.55.214:8001/api/transaction';
       await http.put(url,
           body: json.encode({
             'id': newTransaction.id,
@@ -105,8 +105,10 @@ class Transactions with ChangeNotifier {
             'trxtype': newTransaction.transactionType,
             'date': newTransaction.date,
             'trxvalue': newTransaction.transactionValue,
+            'description':newTransaction.description,
           }));
       _items[prodIndex] = newTransaction;
+      print('Masuk Update');
       notifyListeners();
     } else {
       print('....');
@@ -114,7 +116,7 @@ class Transactions with ChangeNotifier {
   }
 
   Future<void> createTransaction(
-      String transactionType, String date, int trxValue) async {
-    return _createTransaksi(transactionType, date, trxValue);
+      String transactionType, String date, int trxValue,String description) async {
+    return _createTransaksi(transactionType, date, trxValue,description);
   }
 }

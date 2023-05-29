@@ -1,6 +1,8 @@
 import 'package:cashflow/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import '../providers/transaction.dart';
 import '../providers/transactions.dart';
@@ -16,8 +18,6 @@ class EditTransactionScreen extends StatefulWidget {
 class _EditTransactionScreenState extends State<EditTransactionScreen> {
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
-  final _imageUrlController = TextEditingController();
-  final _imageUrlFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
   var _editedTrx = Transaction(
     id: null,
@@ -25,21 +25,22 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     transactionValue: 0,
     transactionType: '',
     userId: 1,
+    description: '',
   );
 
   var _initValues = {
-    'id': 0,
+    'id': null,
     'user_id': '',
     'transaction_type': '',
     'date': '',
     'transaction_value': 0,
+    'description': ''
   };
   var _isInit = true;
   var _isLoading = false;
 
   @override
   void initState() {
-    _imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
   }
 
@@ -53,9 +54,10 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
         _initValues = {
           'id': _editedTrx.id,
           'user_id': _editedTrx.userId,
-          'transaction_type': _editedTrx.transactionValue,
+          'transaction_type': _editedTrx.transactionType,
           'date': _editedTrx.date,
-          'transaction_value': _editedTrx.transactionValue
+          'transaction_value': _editedTrx.transactionValue,
+          'description': _editedTrx.description
         };
       }
     }
@@ -65,26 +67,9 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
 
   @override
   void dispose() {
-    _imageUrlFocusNode.removeListener(_updateImageUrl);
     _priceFocusNode.dispose();
     _descriptionFocusNode.dispose();
-    _imageUrlController.dispose();
-    _imageUrlFocusNode.dispose();
     super.dispose();
-  }
-
-  void _updateImageUrl() {
-    if (!_imageUrlFocusNode.hasFocus) {
-      if (_imageUrlController.text.isEmpty ||
-          (!_imageUrlController.text.startsWith('http') ||
-              !_imageUrlController.text.startsWith('https')) ||
-          (!_imageUrlController.text.endsWith('.png') &&
-              !_imageUrlController.text.endsWith('.jpg') &&
-              !_imageUrlController.text.endsWith('.jpeg'))) {
-        return null;
-      }
-      setState(() {});
-    }
   }
 
   Future<void> _saveForm() async {
@@ -97,19 +82,24 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
       _isLoading = true;
     });
     if (_editedTrx.id != null) {
+      print('Masuk Update');
       await Provider.of<Transactions>(context, listen: false)
           .updateTransactions(_editedTrx.id, _editedTrx);
     } else {
       try {
+        print('Masuk Create');
+        print(
+            'transaction type : ${_editedTrx.transactionType},date : ${_editedTrx.date},transaction value : ${_editedTrx.transactionValue},transaction desc : ${_editedTrx.description},');
         await Provider.of<Transactions>(context, listen: false)
             .createTransaction(_editedTrx.transactionType, _editedTrx.date,
-                _editedTrx.transactionValue);
+                _editedTrx.transactionValue, _editedTrx.description);
+        
       } catch (error) {
         await showDialog<Null>(
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('An error occured!'),
-            content: Text('Something went wrong.'),
+            content: Text(error.toString()),
             actions: <Widget>[
               ElevatedButton(
                 child: Text('Okay'),
@@ -146,7 +136,6 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
           ),
         ],
       ),
-      
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
@@ -158,8 +147,8 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                 child: ListView(
                   children: <Widget>[
                     TextFormField(
-                      initialValue: _initValues['title'],
-                      decoration: InputDecoration(labelText: 'Title'),
+                      initialValue: _initValues['description'],
+                      decoration: InputDecoration(labelText: 'Description'),
                       textInputAction: TextInputAction.next,
                       onFieldSubmitted: (_) {
                         FocusScope.of(context).requestFocus(_priceFocusNode);
@@ -172,128 +161,120 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        // _e = Product(
-                        //   title: value,
-                        //   price: _editedProduct.price,
-                        //   description: _editedProduct.description,
-                        //   imageUrl: _editedProduct.imageUrl,
-                        //   id: _editedProduct.id,
-                        //   isFavorite: _editedProduct.isFavorite,
-                        // );
+                        _editedTrx = Transaction(
+                          id: _editedTrx.id,
+                          userId: _editedTrx.userId,
+                          transactionType: _editedTrx.transactionType,
+                          date: _editedTrx.date,
+                          transactionValue: _editedTrx.transactionValue,
+                          description: value,
+                        );
                       },
                     ),
                     TextFormField(
-                      initialValue: _initValues['price'],
-                      decoration: InputDecoration(labelText: 'Price'),
-                      textInputAction: TextInputAction.next,
+                      initialValue: _initValues['transaction_value'].toString(),
+                      decoration:
+                          InputDecoration(labelText: 'Transaction Value'),
                       keyboardType: TextInputType.number,
-                      focusNode: _priceFocusNode,
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context)
-                            .requestFocus(_descriptionFocusNode);
-                      },
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please Provide value';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Please enter a valid number.';
-                        }
-                        if (double.parse(value) <= 0) {
-                          return 'Please enter a number greater than 0';
-                        }
-                        return null;
-                      },
                       onSaved: (value) {
-                        // _editedProduct = Product(
-                        //   title: _editedProduct.title,
-                        //   price: double.parse(value),
-                        //   description: _editedProduct.description,
-                        //   imageUrl: _editedProduct.imageUrl,
-                        //   id: _editedProduct.id,
-                        //   isFavorite: _editedProduct.isFavorite,
-                        // );
+                        _editedTrx = Transaction(
+                          id: _editedTrx.id,
+                          userId: _editedTrx.userId,
+                          transactionType: _editedTrx.transactionType,
+                          date: _editedTrx.date,
+                          transactionValue: int.parse(value) ?? 99,
+                          description: _editedTrx.description,
+                        );
                       },
-                    ),
-                    TextFormField(
-                      initialValue: _initValues['description'],
-                      decoration: InputDecoration(labelText: 'Description'),
-                      maxLines: 3,
-                      keyboardType: TextInputType.multiline,
-                      focusNode: _descriptionFocusNode,
-                      // onSaved: (value) {
-                      //   _editedProduct = Product(
-                      //     title: _editedProduct.title,
-                      //     price: _editedProduct.price,
-                      //     description: value,
-                      //     imageUrl: _editedProduct.imageUrl,
-                      //     id: _editedProduct.id,
-                      //     isFavorite: _editedProduct.isFavorite,
-                      //   );
-                      // },
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please Enter description';
-                        }
-                        if (value.length < 10) {
-                          return 'Description should be more than 10 characters';
+                          return 'Masukkan Jumlah Uang';
                         }
                         return null;
                       },
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          width: 100,
-                          height: 100,
-                          margin: EdgeInsets.only(top: 8, right: 10),
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 1), color: Colors.grey),
-                          child: _imageUrlController.text.isEmpty
-                              ? Text('Enter a URL')
-                              : FittedBox(
-                                  child:
-                                      Image.network(_imageUrlController.text),
-                                  fit: BoxFit.fill,
-                                ),
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            decoration: InputDecoration(labelText: 'Image URL'),
-                            keyboardType: TextInputType.url,
-                            textInputAction: TextInputAction.done,
-                            controller: _imageUrlController,
-                            focusNode: _imageUrlFocusNode,
-                            onFieldSubmitted: (_) {
-                              _saveForm();
-                            },
-                            // onSaved: (value) {
-                            //   _editedProduct = Product(
-                            //     title: _editedProduct.title,
-                            //     price: _editedProduct.price,
-                            //     description: _editedProduct.description,
-                            //     imageUrl: value,
-                            //     id: _editedProduct.id,
-                            //     isFavorite: _editedProduct.isFavorite,
-                            //   );
-                            // },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter an image url';
-                              }
-                              if (!value.startsWith('http') &&
-                                  !value.startsWith('https')) {
-                                return 'Please enter a valid url';
-                              }
-                              if (!value.endsWith('.png') &&
-                                  !value.endsWith('.jpg') &&
-                                  !value.endsWith('.jpeg')) {
-                                return 'Please enter a valid image url.';
-                              }
-                              return null;
+                    SizedBox(height: 10),
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Radio(
+                            value: "1",
+                            groupValue: _initValues['transaction_type'],
+                            onChanged: (value) {
+                              setState(() {
+                                _initValues['transaction_type'] = value;
+                                _editedTrx = Transaction(
+                                  id: _editedTrx.id,
+                                  userId: _editedTrx.userId,
+                                  transactionType: value,
+                                  date: _editedTrx.date,
+                                  transactionValue: _editedTrx.transactionValue,
+                                  description: _editedTrx.description,
+                                );
+                              });
                             },
                           ),
+                          Text('Uang Masuk'),
+                          SizedBox(width: 20),
+                          Radio(
+                            value: "2",
+                            groupValue: _initValues['transaction_type'],
+                            onChanged: (value) {
+                              setState(() {
+                                _initValues['transaction_type'] = value;
+                                _editedTrx = Transaction(
+                                  id: _editedTrx.id,
+                                  userId: _editedTrx.userId,
+                                  transactionType: value,
+                                  date: _editedTrx.date,
+                                  transactionValue: _editedTrx.transactionValue,
+                                  description: _editedTrx.description,
+                                );
+                              });
+                            },
+                          ),
+                          Text('Uang Keluar'),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () async {
+                            await initializeDateFormatting('id_ID', null);
+
+                            final selectedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime(2025),
+                            );
+
+                            if (selectedDate != null) {
+                              final formattedDate =
+                                  DateFormat('EEEE, d MMMM yyyy', 'id_ID')
+                                      .format(selectedDate);
+                              setState(() {
+                                _initValues['date'] = formattedDate;
+                                _editedTrx = Transaction(
+                                  id: _editedTrx.id,
+                                  userId: _editedTrx.userId,
+                                  transactionType: _editedTrx.transactionType,
+                                  date: formattedDate,
+                                  transactionValue: _editedTrx.transactionValue,
+                                  description: _editedTrx.description,
+                                );
+                              });
+                            }
+                          },
+                          child: Text('Pilih Tanggal'),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          _initValues['date'],
+                          style: TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
