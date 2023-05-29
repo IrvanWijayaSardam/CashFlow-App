@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/transaction.dart';
+import '../utils/utils.dart';
 
 class TransactionItem extends StatelessWidget {
   @override
@@ -32,6 +33,7 @@ class TransactionItem extends StatelessWidget {
                     transaction.description,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
                     ),
                   ),
                 ],
@@ -49,11 +51,11 @@ class TransactionItem extends StatelessWidget {
                   SizedBox(height: 8.0),
                   Expanded(
                     child: Text(
-                      transaction.transactionType.toString() == "1" ? "+${transaction.transactionValue.toString()}" : "-${transaction.transactionValue.toString()}",
+                      transaction.transactionType.toString() == "1" ? " Uang Masuk +${Utils.formatCurrency(transaction.transactionValue)}" : "Uang Keluar -${Utils.formatCurrency(transaction.transactionValue)}",
                       textAlign: TextAlign.end,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
+                        fontSize: 13.0,
                       ),
                     ),
                   ),

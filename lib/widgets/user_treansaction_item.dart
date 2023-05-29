@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../screens/edit_transaction_screen.dart';
 import '../providers/transactions.dart';
+import '../utils/utils.dart';
 
 class UserTransactionItem extends StatelessWidget {
   final int id;
@@ -21,7 +22,7 @@ class UserTransactionItem extends StatelessWidget {
 
     return ListTile(
       title: Text(description),
-      subtitle: Text(transactionType.toString() == "1" ? "Transaction Value: +${transactionValue.toString()}" : "Transaction Value: -${transactionValue.toString()}"), // Add this line
+      subtitle: Text(transactionType.toString() == "1" ? "Uang Masuk: +${Utils.formatCurrency(transactionValue)}" : "Uang Keluar: -${Utils.formatCurrency(transactionValue)}"), // Add this line
       trailing: Container(
         width: 100,
         child: Row(

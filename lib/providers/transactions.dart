@@ -56,8 +56,8 @@ class Transactions with ChangeNotifier {
     }
   }
 
-  Future<void> _createTransaksi(
-      String transactionType, String date, int trxValue,String description) async {
+  Future<void> _createTransaksi(String transactionType, String date,
+      int trxValue, String description) async {
     final url = Uri.parse('http://157.245.55.214:8001/api/transaction/');
     try {
       final response = await http.post(
@@ -72,7 +72,7 @@ class Transactions with ChangeNotifier {
             'trxtype': transactionType,
             'date': date,
             'trxvalue': trxValue,
-            'description':description,
+            'description': description,
           },
         ),
       );
@@ -94,29 +94,56 @@ class Transactions with ChangeNotifier {
     }
   }
 
-  Future<void> updateTransactions(int id, Transaction newTransaction) async {
+  Future<void> _updateTransaction(int id, Transaction newTransaction) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      final url = 'http://157.245.55.214:8001/api/transaction';
-      await http.put(url,
-          body: json.encode({
-            'id': newTransaction.id,
-            'userid': userId,
-            'trxtype': newTransaction.transactionType,
-            'date': newTransaction.date,
-            'trxvalue': newTransaction.transactionValue,
-            'description':newTransaction.description,
-          }));
-      _items[prodIndex] = newTransaction;
-      print('Masuk Update');
+      final url = 'http://157.245.55.214:8001/api/transaction/';
+      try {
+        final response = await http.put(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': jwtToken,
+          },
+          body: json.encode(
+            {
+              'id': newTransaction.id,
+              'userid': newTransaction.userId,
+              'trxtype': newTransaction.transactionType,
+              'date': newTransaction.date,
+              'trxvalue': newTransaction.transactionValue,
+              'description': newTransaction.description,
+            },
+          ),
+        );
+        _items[prodIndex] = newTransaction;
+        final responseData = json.decode(response.body);
+        if (response.statusCode == 200) {
+          print(json.decode(response.body));
+          notifyListeners();
+        } else {
+          // Check if the error response contains 'errors' field
+          if (responseData['errors'] != null) {
+            throw HttpException(responseData['errors'].toString());
+          } else {
+            throw HttpException('An error occurred. Please try again later.');
+          }
+        }
+      } catch (error) {
+        throw error;
+      }
       notifyListeners();
     } else {
       print('....');
     }
   }
 
-  Future<void> createTransaction(
-      String transactionType, String date, int trxValue,String description) async {
-    return _createTransaksi(transactionType, date, trxValue,description);
+  Future<void> createTransaction(String transactionType, String date,
+      int trxValue, String description) async {
+    return _createTransaksi(transactionType, date, trxValue, description);
+  }
+
+  Future<void> updateTransaction(int id, Transaction) async {
+    return _updateTransaction(id, Transaction);
   }
 }
