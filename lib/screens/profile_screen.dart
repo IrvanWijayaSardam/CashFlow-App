@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
 
+import '../screens/edit_profile_screen.dart';
+
 import '../widgets/app_drawer.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -41,14 +43,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Column(
                       children: [
                         Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.blue,
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.all(5.0),
+                          child: ClipOval(
+                            child: Image.network(
+                              "https://pbs.twimg.com/profile_images/1399213322352791557/waxUiBN7_400x400.jpg",
+                              width: 40.0,
+                              height: 40.0,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                          // Replace the placeholder image with your own image
-                          child: Icon(Icons.person, color: Colors.white),
                         ),
                       ],
                     ),
@@ -57,30 +61,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Consumer<Auth>(builder: (ctx, auth, _) => 
-                          Text(
-                            auth.name ?? '',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
-                          )),
+                          Consumer<Auth>(
+                              builder: (ctx, auth, _) => Text(
+                                    auth.name ?? '',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
+                                    ),
+                                  )),
                           SizedBox(height: 5),
-                          Consumer<Auth>(builder: (ctx, auth, _) => 
-                          Text(
-                            auth.telp ?? '',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
-                          )),
+                          Consumer<Auth>(
+                              builder: (ctx, auth, _) => Text(
+                                    auth.telp ?? '',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
+                                    ),
+                                  )),
                         ],
                       ),
                     ),
                     SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: () {
-                        // Button onPressed code
+                        Navigator.of(context)
+                            .pushNamed(EditProfileScreen.routeName);
                       },
                       child: Text('EDIT'),
                     ),

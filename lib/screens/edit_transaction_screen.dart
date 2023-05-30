@@ -6,7 +6,6 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import '../providers/transaction.dart';
 import '../providers/transactions.dart';
-import '../providers/auth.dart';
 
 class EditTransactionScreen extends StatefulWidget {
   static const routeName = "/edit-transaction";
