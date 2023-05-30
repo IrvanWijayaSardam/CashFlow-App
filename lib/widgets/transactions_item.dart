@@ -9,6 +9,30 @@ class TransactionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final transaction = Provider.of<Transaction>(context, listen: true);
 
+    IconData _getIconForTransactionGroup(String transactionGroup) {
+      switch (transactionGroup) {
+        case "1":
+          return Icons
+              .fastfood; // Replace Icons.school with the desired educational hat icon
+        case "2":
+          return Icons.directions_bus; // Replace Icons.home with the desired house icon
+        case "3":
+          return Icons.hotel; // Replace Icons.money with the desired debt icon
+        case "4":
+          return Icons
+              .shopping_cart; // Replace Icons.fastfood with the desired food/drink icon
+        case "5":
+          return Icons
+              .house; // Replace Icons.shopping_cart with the desired grocery icon
+        case "6":
+          return Icons
+              .school; // Replace Icons.directions_bus with the desired transportation icon
+        default:
+          return Icons
+              .error; // Replace Icons.error with a default icon or handle the case when the transaction group is not recognized
+      }
+    }
+
     return GestureDetector(
       onTap: () {
         // Add your desired functionality here
@@ -48,11 +72,11 @@ class TransactionItem extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.network(
-                    "https://api.duniagames.co.id/api/content/upload/file/3938980811652179565.jpg",
-                    width: 20.0,
-                    height: 20.0,
-                    fit: BoxFit.cover,
+                  Icon(
+                    _getIconForTransactionGroup(transaction.transactionGroup),
+                    size: 30.0,
+                    color: Colors
+                        .black, // Replace Colors.black with the desired color
                   ),
                   SizedBox(height: 8.0),
                   Expanded(

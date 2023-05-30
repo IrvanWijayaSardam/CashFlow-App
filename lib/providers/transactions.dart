@@ -47,6 +47,7 @@ class Transactions with ChangeNotifier {
           date: trxData['date'],
           transactionValue: trxData['transaction_value'],
           description: trxData['description'],
+          transactionGroup: trxData['transaction_group']
         ));
       });
       _items = loadedTransactions;
@@ -113,6 +114,7 @@ class Transactions with ChangeNotifier {
               'date': newTransaction.date,
               'trxvalue': newTransaction.transactionValue,
               'description': newTransaction.description,
+              'trxgroup' : '',
             },
           ),
         );

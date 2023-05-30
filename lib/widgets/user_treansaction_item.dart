@@ -12,9 +12,11 @@ class UserTransactionItem extends StatelessWidget {
   final String date;
   final int transactionValue;
   final String description;
+  final String transactioNGroup;
+
 
   UserTransactionItem(this.id, this.userId, this.transactionType, this.date,
-      this.transactionValue,this.description);
+      this.transactionValue,this.description,this.transactioNGroup);
 
   @override
   Widget build(BuildContext context) {

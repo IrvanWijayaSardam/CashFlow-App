@@ -2,7 +2,7 @@ import 'package:cashflow/screens/user_transaction_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/profile_screen.dart';
-
+import '../screens/report_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   final String drawerTitle;
@@ -31,15 +31,8 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.payment),
             title: Text('Transactions'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(UserTransactionsScreen.routeName);
-            },
-          ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.edit),
-            title: Text('Anggaran'),
-            onTap: () {
-              // Navigator.of(context).pushReplacementNamed(UserProductsScreen.routeName);
+              Navigator.of(context)
+                  .pushReplacementNamed(UserTransactionsScreen.routeName);
             },
           ),
           Divider(),
@@ -47,7 +40,8 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.history),
             title: Text('Laporan'),
             onTap: () {
-              // Navigator.of(context).pushReplacementNamed(UserProductsScreen.routeName);
+              Navigator.of(context)
+                  .pushReplacementNamed(ReportScreen.routeName);
             },
           ),
           Divider(),
@@ -55,7 +49,8 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.person),
             title: Text('Manage Profile'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(ProfileScreen.routeName);
+              Navigator.of(context)
+                  .pushReplacementNamed(ProfileScreen.routeName);
             },
           ),
           Divider(),
