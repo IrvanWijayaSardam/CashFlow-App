@@ -42,18 +42,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Column(
                       children: [
-                        Container(
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.all(5.0),
-                          child: ClipOval(
-                            child: Image.network(
-                              "https://pbs.twimg.com/profile_images/1399213322352791557/waxUiBN7_400x400.jpg",
-                              width: 40.0,
-                              height: 40.0,
-                              fit: BoxFit.cover,
+                        Consumer<Auth>(
+                          builder: (ctx, auth, _) => Container(
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.all(5.0),
+                            child: ClipOval(
+                              child: Image.network(
+                                auth.profile,
+                                width: 40.0,
+                                height: 40.0,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
+                        )
                       ],
                     ),
                     SizedBox(width: 10),

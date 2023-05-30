@@ -41,14 +41,13 @@ class Transactions with ChangeNotifier {
       final List<dynamic> transactionsData = responseData['data'];
       transactionsData.forEach((trxData) {
         loadedTransactions.add(Transaction(
-          id: trxData['id'],
-          userId: trxData['user_id'],
-          transactionType: trxData['transaction_type'],
-          date: trxData['date'],
-          transactionValue: trxData['transaction_value'],
-          description: trxData['description'],
-          transactionGroup: trxData['transaction_group']
-        ));
+            id: trxData['id'],
+            userId: trxData['user_id'],
+            transactionType: trxData['transaction_type'],
+            date: trxData['date'],
+            transactionValue: trxData['transaction_value'],
+            description: trxData['description'],
+            transactionGroup: trxData['transaction_group']));
       });
       _items = loadedTransactions;
       notifyListeners();
@@ -58,7 +57,7 @@ class Transactions with ChangeNotifier {
   }
 
   Future<void> _createTransaksi(String transactionType, String date,
-      int trxValue, String description) async {
+      int trxValue, String description, String trxGroup) async {
     final url = Uri.parse('http://157.245.55.214:8001/api/transaction/');
     try {
       final response = await http.post(
@@ -74,6 +73,7 @@ class Transactions with ChangeNotifier {
             'date': date,
             'trxvalue': trxValue,
             'description': description,
+            'trxgroup': trxGroup,
           },
         ),
       );
@@ -114,7 +114,7 @@ class Transactions with ChangeNotifier {
               'date': newTransaction.date,
               'trxvalue': newTransaction.transactionValue,
               'description': newTransaction.description,
-              'trxgroup' : '',
+              'trxgroup': newTransaction.transactionGroup,
             },
           ),
         );
@@ -158,8 +158,9 @@ class Transactions with ChangeNotifier {
   }
 
   Future<void> createTransaction(String transactionType, String date,
-      int trxValue, String description) async {
-    return _createTransaksi(transactionType, date, trxValue, description);
+      int trxValue, String description, String trxGroup) async {
+    return _createTransaksi(
+        transactionType, date, trxValue, description, trxGroup);
   }
 
   Future<void> updateTransaction(int id, Transaction) async {

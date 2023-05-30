@@ -37,23 +37,30 @@ class _ReportScreenState extends State<ReportScreen> {
     Map<String, double> chartData = {};
     for (var item in trxData.items) {
       if (item.transactionGroup == "1") {
-        chartData["Pendidikan"] = item.total_transaction.toDouble();
-      } else if (item.transactionGroup == "2") {
-        chartData["Tempat Tinggal"] = item.total_transaction.toDouble();
-      } else if (item.transactionGroup == "3") {
-        chartData["Tagihan"] = item.total_transaction.toDouble();
-      } else if (item.transactionGroup == "4") {
         chartData["Makanan / Minuman"] = item.total_transaction.toDouble();
-      } else if (item.transactionGroup == "5") {
-        chartData["Belanja"] = item.total_transaction.toDouble();
-      } else if (item.transactionGroup == "6") {
+      } else if (item.transactionGroup == "2") {
         chartData["Transportasi"] = item.total_transaction.toDouble();
+      } else if (item.transactionGroup == "3") {
+        chartData["Tempat Tinggal"] = item.total_transaction.toDouble();
+      } else if (item.transactionGroup == "4") {
+        chartData["Belanja"] = item.total_transaction.toDouble();
+      } else if (item.transactionGroup == "5") {
+        chartData["Tagihan"] = item.total_transaction.toDouble();
+      } else if (item.transactionGroup == "6") {
+        chartData["Pendidikan"] = item.total_transaction.toDouble();
       }
     }
 
     if (chartData.isEmpty) {
-      return Center(
-        child: Text('No data available for the pie chart.'),
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Laporan Transaksi'),
+        ),
+        drawer: Consumer<Auth>(
+          builder: (ctx, auth, _) => AppDrawer(
+            drawerTitle: auth.name ?? '',
+          ),
+        ),
       );
     }
     return Scaffold(
@@ -80,7 +87,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 initialAngleInDegree: 0,
                 chartType: ChartType.disc,
                 ringStrokeWidth: 32,
-                centerText: "Transaction Group",
+                centerText: "Transaksi",
                 legendOptions: LegendOptions(
                   showLegendsInRow: false,
                   legendPosition: LegendPosition.bottom,

@@ -97,15 +97,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       body: Column(
         children: [
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.all(16.0),
-            child: ClipOval(
-              child: Image.network(
-                "https://pbs.twimg.com/profile_images/1399213322352791557/waxUiBN7_400x400.jpg",
-                width: 100.0,
-                height: 100.0,
-                fit: BoxFit.cover,
+          Consumer<Auth>(
+            builder: (ctx, auth, _) => Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.all(16.0),
+              child: ClipOval(
+                child: Image.network(
+                  auth.profile,
+                  width: 100.0,
+                  height: 100.0,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
@@ -173,6 +175,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     pin: _editedProfile.pin,
                     profile: _editedProfile.profile,
                     telp: value,
+                  );
+                });
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.all(16.0),
+            child: TextFormField(
+              initialValue: _initValues['profile'],
+              decoration: InputDecoration(
+                labelText: 'Link Profile',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _editedProfile = Profile(
+                    name: _editedProfile.name,
+                    email: _editedProfile.email,
+                    password: _editedProfile.password,
+                    jk: _editedProfile.jk,
+                    pin: _editedProfile.pin,
+                    profile: value,
+                    telp: _editedProfile.telp,
                   );
                 });
               },
