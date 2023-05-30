@@ -210,7 +210,6 @@ class Auth with ChangeNotifier {
       print(responseData);
 
       if (response.statusCode == 200) {
-        _jwtToken = responseData["data"]["token"];
         _id = responseData["data"]["id"];
         _name = responseData["data"]["name"];
         _email = responseData["data"]["email"];
