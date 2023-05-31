@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth.dart';
 import '../models/http_exception.dart';
 import 'home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -15,6 +16,15 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    final authData = Provider.of<Auth>(context, listen: false);
+
+// Check if the user is already authenticated
+    authData.tryAutoLogin().then((isAuthenticated) {
+      if (isAuthenticated) {
+        Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+      }
+    });
+
     return Scaffold(
       body: Stack(
         children: <Widget>[

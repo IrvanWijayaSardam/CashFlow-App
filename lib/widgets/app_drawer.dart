@@ -1,8 +1,12 @@
 import 'package:cashflow/screens/user_transaction_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../screens/profile_screen.dart';
 import '../screens/report_screen.dart';
+import '../providers/auth.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppDrawer extends StatelessWidget {
   final String drawerTitle;
@@ -58,7 +62,8 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
             onTap: () {
-              // Navigator.of(context).pushReplacementNamed(UserProductsScreen.routeName);
+              Provider.of<Auth>(context, listen: false).logout();
+              Navigator.of(context).pushReplacementNamed('/');
             },
           ),
         ],

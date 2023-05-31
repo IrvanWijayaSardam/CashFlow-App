@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import '../models/http_exception.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './profile.dart';
 
@@ -16,8 +17,10 @@ class Auth with ChangeNotifier {
   String _pin;
   String _jk;
 
+  bool _isAuthenticated = false;
+
   bool get isAuth {
-    return jwtToken != null;
+    return _isAuthenticated;
   }
 
   String get jwtToken {
@@ -100,6 +103,26 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  Future<bool> tryAutoLogin() async {
+  final prefs = await SharedPreferences.getInstance();
+  if (!prefs.containsKey('jwtToken')) {
+    return false;
+  }
+  _jwtToken = prefs.getString('jwtToken');
+  _id = prefs.getInt('id');
+  _name = prefs.getString('name');
+  _email = prefs.getString('email');
+  _profile = prefs.getString('profile');
+  _telp = prefs.getString('telp');
+  _pin = prefs.getString('pin');
+  _jk = prefs.getString('jk');
+
+  _isAuthenticated = true;
+  notifyListeners();
+  return true;
+}
+
+
   Future<void> _authenticate(String email, String password) async {
     final url = Uri.parse('http://157.245.55.214:8001/api/auth/login');
     try {
@@ -129,10 +152,33 @@ class Auth with ChangeNotifier {
       _jk = responseData["data"]["jk"];
       _jwtToken = responseData["data"]["token"];
 
+      _isAuthenticated = true;
+
+      // Save the user session using shared preferences
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('jwtToken', _jwtToken);
+      prefs.setInt('id', _id);
+      prefs.setString('name', _name);
+      prefs.setString('email', _email);
+      prefs.setString('profile', _profile);
+      prefs.setString('telp', _telp);
+      prefs.setString('pin', _pin);
+      prefs.setString('jk', _jk);
+
       notifyListeners();
     } catch (error) {
       throw error;
     }
+  }
+
+  Future<void> logout() async {
+    // Perform logout logic
+    _isAuthenticated = false;
+    notifyListeners();
+
+    // Clear shared preferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
   }
 
   Future<void> _createAccount(String name, String email, String password,
