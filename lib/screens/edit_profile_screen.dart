@@ -107,6 +107,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   width: 100.0,
                   height: 100.0,
                   fit: BoxFit.cover,
+                  errorBuilder: (BuildContext context, Object exception,
+                      StackTrace stackTrace) {
+                    return Image.asset(
+                      'assets/images/user.png', // Replace with your placeholder image path
+                      width: 100.0,
+                      height: 100.0,
+                      fit: BoxFit.cover,
+                    );
+                  },
                 ),
               ),
             ),

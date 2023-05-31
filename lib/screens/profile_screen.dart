@@ -52,6 +52,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: 40.0,
                                 height: 40.0,
                                 fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context,
+                                    Object exception, StackTrace stackTrace) {
+                                  return Image.asset(
+                                    'assets/images/user.png', // Replace with your placeholder image path
+                                    width: 40.0,
+                                    height: 40.0,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               ),
                             ),
                           ),

@@ -104,24 +104,23 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> tryAutoLogin() async {
-  final prefs = await SharedPreferences.getInstance();
-  if (!prefs.containsKey('jwtToken')) {
-    return false;
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('jwtToken')) {
+      return false;
+    }
+    _jwtToken = prefs.getString('jwtToken');
+    _id = prefs.getInt('id');
+    _name = prefs.getString('name');
+    _email = prefs.getString('email');
+    _profile = prefs.getString('profile');
+    _telp = prefs.getString('telp');
+    _pin = prefs.getString('pin');
+    _jk = prefs.getString('jk');
+
+    _isAuthenticated = true;
+    notifyListeners();
+    return true;
   }
-  _jwtToken = prefs.getString('jwtToken');
-  _id = prefs.getInt('id');
-  _name = prefs.getString('name');
-  _email = prefs.getString('email');
-  _profile = prefs.getString('profile');
-  _telp = prefs.getString('telp');
-  _pin = prefs.getString('pin');
-  _jk = prefs.getString('jk');
-
-  _isAuthenticated = true;
-  notifyListeners();
-  return true;
-}
-
 
   Future<void> _authenticate(String email, String password) async {
     final url = Uri.parse('http://157.245.55.214:8001/api/auth/login');
@@ -263,6 +262,17 @@ class Auth with ChangeNotifier {
         _telp = responseData["data"]["telp"];
         _pin = responseData["data"]["pin"];
         _jk = responseData["data"]["jk"];
+
+        // Save the user session using shared preferences
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString('jwtToken', _jwtToken);
+        prefs.setInt('id', _id);
+        prefs.setString('name', _name);
+        prefs.setString('email', _email);
+        prefs.setString('profile', _profile);
+        prefs.setString('telp', _telp);
+        prefs.setString('pin', _pin);
+        prefs.setString('jk', _jk);
 
         print(json.decode(response.body));
         notifyListeners();
