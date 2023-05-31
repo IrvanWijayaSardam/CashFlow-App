@@ -79,8 +79,11 @@ class Transactions with ChangeNotifier {
       );
 
       final responseData = json.decode(response.body);
+      print(responseData);
       if (response.statusCode == 201) {
         print(json.decode(response.body));
+        final newTransaction = Transaction(id: responseData['data']['id'], userId: userId, transactionType: transactionType, date: date, transactionValue: trxValue, description: description, transactionGroup: trxGroup);
+        _items.add(newTransaction);
         notifyListeners();
       } else {
         // Check if the error response contains 'errors' field

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import '../providers/auth.dart';
 import '../widgets/app_drawer.dart';
 import '../providers/transactions.dart';
+import '../providers/reports.dart';
+import '../utils/utils.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home-screen';
@@ -36,6 +38,14 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       Provider.of<Transactions>(context, listen: false)
           .fetchAndSetTransactions()
+          .then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+
+      Provider.of<Reports>(context, listen: false)
+          .fetchAndSetSummary()
           .then((_) {
         setState(() {
           _isLoading = false;
@@ -78,7 +88,53 @@ class _HomeScreenState extends State<HomeScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : TransactionsGrid(),
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Card(
+                    elevation: 5.0,
+                    child: Container(
+                      padding: const EdgeInsets.all(20.0),
+                      width: MediaQuery.of(context).size.width,
+                      height: 130,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Consumer<Reports>(
+                            builder: (ctx, report, _) => Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Saldo',
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold)),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: Text(
+                                    '${Utils.formatCurrency(report.dataSummary.transactionIn - report.dataSummary.transactionOut)}',
+                                    style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Text(
+                                    'Pemasukan : ${Utils.formatCurrency(report.dataSummary.transactionIn)}'),
+                                Text(
+                                    'Pengeluaran : ${Utils.formatCurrency(report.dataSummary.transactionOut)}'),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: TransactionsGrid(),
+                ),
+              ],
+            ),
     );
   }
 }

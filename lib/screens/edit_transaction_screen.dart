@@ -1,8 +1,8 @@
-import 'package:cashflow/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter/foundation.dart';
 
 import '../providers/transaction.dart';
 import '../providers/transactions.dart';
@@ -125,6 +125,9 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                 _editedTrx.description,
                 _editedTrx.transactionGroup);
       } catch (error) {
+        if (kDebugMode) {
+        print('add products');
+      }
         await showDialog<Null>(
           context: context,
           builder: (ctx) => AlertDialog(

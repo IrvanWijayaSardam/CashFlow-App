@@ -39,6 +39,7 @@ class TransactionItem extends StatelessWidget {
         print('Card tapped!');
       },
       child: Card(
+        elevation: 5.0,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

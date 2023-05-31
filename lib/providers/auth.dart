@@ -140,32 +140,36 @@ class Auth with ChangeNotifier {
       final responseData = json.decode(response.body);
       print(json.decode(response.body));
       if (responseData['errors'] != null) {
-        throw HttpException(responseData['errors']);
+        final errors = responseData['errors'] as List<dynamic>;
+        final errorMessage = errors.join(', ');
+        throw HttpException(errorMessage);
+      } else {
+        _id = responseData["data"]["id"];
+        _name = responseData["data"]["name"];
+        _email = responseData["data"]["email"];
+        _profile = responseData["data"]["profile"];
+        _telp = responseData["data"]["telp"];
+        _pin = responseData["data"]["pin"];
+        _jk = responseData["data"]["jk"];
+        _jwtToken = responseData["data"]["token"];
+
+        _isAuthenticated = true;
+
+        // Save the user session using shared preferences
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString('jwtToken', _jwtToken);
+        prefs.setInt('id', _id);
+        prefs.setString('name', _name);
+        prefs.setString('email', _email);
+        prefs.setString('profile', _profile);
+        prefs.setString('telp', _telp);
+        prefs.setString('pin', _pin);
+        prefs.setString('jk', _jk);
       }
-      _id = responseData["data"]["id"];
-      _name = responseData["data"]["name"];
-      _email = responseData["data"]["email"];
-      _profile = responseData["data"]["profile"];
-      _telp = responseData["data"]["telp"];
-      _pin = responseData["data"]["pin"];
-      _jk = responseData["data"]["jk"];
-      _jwtToken = responseData["data"]["token"];
-
-      _isAuthenticated = true;
-
-      // Save the user session using shared preferences
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('jwtToken', _jwtToken);
-      prefs.setInt('id', _id);
-      prefs.setString('name', _name);
-      prefs.setString('email', _email);
-      prefs.setString('profile', _profile);
-      prefs.setString('telp', _telp);
-      prefs.setString('pin', _pin);
-      prefs.setString('jk', _jk);
 
       notifyListeners();
     } catch (error) {
+      print(error.toString());
       throw error;
     }
   }

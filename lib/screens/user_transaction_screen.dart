@@ -17,7 +17,7 @@ class UserTransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final trxData = Provider.of<Transactions>(context);
+    // final trxData = Provider.of<Transactions>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -36,29 +36,37 @@ class UserTransactionsScreen extends StatelessWidget {
           drawerTitle: auth.name ?? '',
         ),
       ),
-        body: RefreshIndicator(
-          onRefresh: () => _refreshTransactions(context),
-          child: Padding(
-            padding: EdgeInsets.all(8),
-            child: ListView.builder(
-              itemCount: trxData.items.length,
-              itemBuilder: (_, i) => Column(
-                children: [
-                  UserTransactionItem(
-                    trxData.items[i].id,
-                    trxData.items[i].userId,
-                    trxData.items[i].transactionType,
-                    trxData.items[i].date,
-                    trxData.items[i].transactionValue,
-                    trxData.items[i].description,
-                    trxData.items[i].transactionGroup,
+      body: FutureBuilder(
+        future: _refreshTransactions(context),
+        builder: (ctx, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () => _refreshTransactions(context),
+                    child: Consumer<Transactions> (builder: (ctx, trxData, _) => Padding(
+                      padding: EdgeInsets.all(8),
+                      child: ListView.builder(
+                        itemCount: trxData.items.length,
+                        itemBuilder: (_, i) => Column(
+                          children: [
+                            UserTransactionItem(
+                              trxData.items[i].id,
+                              trxData.items[i].userId,
+                              trxData.items[i].transactionType,
+                              trxData.items[i].date,
+                              trxData.items[i].transactionValue,
+                              trxData.items[i].description,
+                              trxData.items[i].transactionGroup,
+                            ),
+                            Divider(),
+                          ],
+                        ),
+                      ),
+                    ),)
                   ),
-                  Divider(),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
+      ),
+    );
   }
 }

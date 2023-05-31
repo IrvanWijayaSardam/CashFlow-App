@@ -118,12 +118,14 @@ class _AuthCardState extends State<AuthCard> {
       if (error != null) {
         if (error.toString().contains("Duplicate")) {
           _showErrorDialog("Ooops , Email Sudah Digunakan");
+        } else if (error.toString().contains("Invalid Credential")) {
+          _showErrorDialog("Email Atau Password Salah");
         } else {
           _showErrorDialog(error.toString());
         }
       }
     } catch (error) {
-      _showErrorDialog(error.toString());
+      _showErrorDialog("masuk catch bawah");
     }
 
     setState(() {
