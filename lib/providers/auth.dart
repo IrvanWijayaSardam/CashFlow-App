@@ -6,6 +6,8 @@ import '../models/http_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import './profile.dart';
+import 'package:http_parser/http_parser.dart';
+import 'dart:io';
 
 class Auth with ChangeNotifier {
   String _jwtToken;
@@ -218,6 +220,19 @@ class Auth with ChangeNotifier {
         _pin = responseData["data"]["pin"];
         _jk = responseData["data"]["jk"];
 
+        _isAuthenticated = true;
+
+        // Save the user session using shared preferences
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString('jwtToken', _jwtToken);
+        prefs.setInt('id', _id);
+        prefs.setString('name', _name);
+        prefs.setString('email', _email);
+        prefs.setString('profile', _profile);
+        prefs.setString('telp', _telp);
+        prefs.setString('pin', _pin);
+        prefs.setString('jk', _jk);
+
         print(json.decode(response.body));
         notifyListeners();
       } else {
@@ -296,6 +311,55 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<void> _uploadProfilePicture(File file) async {
+    final url = Uri.parse('http://157.245.55.214:8001/api/user/picture');
+    try {
+      final request = http.MultipartRequest('POST', url);
+
+      request.headers['Content-Type'] = 'application/json';
+      request.headers['Authorization'] = jwtToken;
+
+      // Attach the file to the request
+      request.files.add(await http.MultipartFile.fromPath(
+        'file',
+        file.path,
+        contentType:
+            MediaType('image', 'jpeg'), // Adjust the content type as needed
+      ));
+
+      final response = await request.send();
+      final responseData = await response.stream.bytesToString();
+
+      print(responseData);
+
+      if (response.statusCode == 200) {
+        // Handle the successful response
+        final data = json.decode(responseData);
+        final prefs = await SharedPreferences.getInstance();
+        _profile = data['data'].toString();
+
+        prefs.setString('profile', _profile);
+
+        print(data);
+        notifyListeners();
+      } else {
+        // Handle the error response
+        final errorData = json.decode(responseData);
+
+        if (errorData['errors'] != null) {
+          print(errorData['errors']);
+          throw HttpException(errorData['errors'].toString());
+        } else {
+          print(errorData['errors']);
+          throw HttpException('An error occurred. Please try again later.');
+        }
+      }
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
+
   Future<void> login(String email, String password) async {
     return _authenticate(email, password);
   }
@@ -307,5 +371,9 @@ class Auth with ChangeNotifier {
 
   Future<void> update(Profile newProfile) async {
     return _updateAccount(newProfile);
+  }
+
+  Future<void> updateProfilePicture(File file) async {
+    return _uploadProfilePicture(file);
   }
 }

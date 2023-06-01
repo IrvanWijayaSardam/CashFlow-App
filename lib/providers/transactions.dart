@@ -24,7 +24,7 @@ class Transactions with ChangeNotifier {
   }
 
   Future<void> fetchAndSetTransactions() async {
-    var url = 'http://157.245.55.214:8001/api/transaction';
+    var url = Uri.parse('http://157.245.55.214:8001/api/transaction');
     try {
       final response = await http.get(
         url,
@@ -101,7 +101,7 @@ class Transactions with ChangeNotifier {
   Future<void> _updateTransaction(int id, Transaction newTransaction) async {
     final trxIndex = _items.indexWhere((prod) => prod.id == id);
     if (trxIndex >= 0) {
-      final url = 'http://157.245.55.214:8001/api/transaction/';
+      final url = Uri.parse('http://157.245.55.214:8001/api/transaction/');
       try {
         final response = await http.put(
           url,
@@ -144,7 +144,7 @@ class Transactions with ChangeNotifier {
   }
 
   Future<void> _deleteTransactions(int id) async {
-    final url = 'http://157.245.55.214:8001/api/transaction/$id';
+    final url = Uri.parse('http://157.245.55.214:8001/api/transaction/$id');
     final existingTrxIndex = _items.indexWhere((trx) => trx.id == id);
     var existingTrx = _items[existingTrxIndex];
     _items.removeAt(existingTrxIndex);

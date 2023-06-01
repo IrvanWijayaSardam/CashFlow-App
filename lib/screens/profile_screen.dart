@@ -48,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             margin: EdgeInsets.all(5.0),
                             child: ClipOval(
                               child: Image.network(
-                                auth.profile,
+                                "http://157.245.55.214:8001/api/cdn/picture/${auth.profile}",
                                 width: 40.0,
                                 height: 40.0,
                                 fit: BoxFit.cover,
@@ -134,20 +134,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Align(
                     alignment: Alignment.center,
                     child: ListTile(
-                      title: Text('Ubah Pin'),
-                      trailing: Icon(Icons.arrow_right_alt_outlined, size: 25),
-                    ),
-                  ),
-                ),
-                Divider(
-                  color: Colors.white,
-                  thickness: 1,
-                ),
-                Container(
-                  height: 50, // Set the desired height for the ListTile
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: ListTile(
                       title: Text('Bantuan'),
                       trailing: Icon(Icons.arrow_right_alt_outlined, size: 25),
                     ),
@@ -163,20 +149,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     alignment: Alignment.center,
                     child: ListTile(
                       title: Text('Tentang Kami'),
-                      trailing: Icon(Icons.arrow_right_alt_outlined, size: 25),
-                    ),
-                  ),
-                ),
-                Divider(
-                  color: Colors.white,
-                  thickness: 1,
-                ),
-                Container(
-                  height: 50, // Set the desired height for the ListTile
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: ListTile(
-                      title: Text('Logout'),
                       trailing: Icon(Icons.arrow_right_alt_outlined, size: 25),
                     ),
                   ),

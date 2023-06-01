@@ -15,7 +15,8 @@ class TransactionItem extends StatelessWidget {
           return Icons
               .fastfood; // Replace Icons.school with the desired educational hat icon
         case "2":
-          return Icons.directions_bus; // Replace Icons.home with the desired house icon
+          return Icons
+              .directions_bus; // Replace Icons.home with the desired house icon
         case "3":
           return Icons.hotel; // Replace Icons.money with the desired debt icon
         case "4":
@@ -39,6 +40,7 @@ class TransactionItem extends StatelessWidget {
         print('Card tapped!');
       },
       child: Card(
+        color: Color.fromARGB(255, 190, 252, 222),
         elevation: 5.0,
         child: Padding(
           padding: const EdgeInsets.all(8.0),

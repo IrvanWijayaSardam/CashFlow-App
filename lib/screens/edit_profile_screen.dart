@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
 import '../providers/profile.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class EditProfileScreen extends StatefulWidget {
   static const routeName = "/edit-profile";
@@ -12,6 +15,41 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  Future<void> pickImageFromGallery() async {
+    final permissionStatus = await Permission.storage.request();
+    if (permissionStatus.isGranted) {
+      final picker = ImagePicker();
+      final pickedImage = await picker.getImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        try {
+          final file = File(pickedImage.path);
+          await Provider.of<Auth>(context, listen: false)
+              .updateProfilePicture(file);
+        } catch (error) {
+          await showDialog<Null>(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text('An error occurred!'),
+              content: Text(error.toString()),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                )
+              ],
+            ),
+          );
+        } finally {
+          setState(() {});
+        }
+      }
+    } else {
+      // Handle the case when permission is denied
+    }
+  }
+
   var _editedProfile = Profile(
     name: '',
     email: '',
@@ -99,26 +137,49 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         children: [
           Consumer<Auth>(
             builder: (ctx, auth, _) => Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.all(16.0),
-              child: ClipOval(
-                child: Image.network(
-                  auth.profile,
-                  width: 100.0,
-                  height: 100.0,
-                  fit: BoxFit.cover,
-                  errorBuilder: (BuildContext context, Object exception,
-                      StackTrace stackTrace) {
-                    return Image.asset(
-                      'assets/images/user.png', // Replace with your placeholder image path
-                      width: 100.0,
-                      height: 100.0,
-                      fit: BoxFit.cover,
-                    );
-                  },
-                ),
-              ),
-            ),
+                alignment: Alignment.center,
+                margin: EdgeInsets.all(16.0),
+                child: Stack(
+                  children: [
+                    ClipOval(
+                      child: Image.network(
+                        "http://157.245.55.214:8001/api/cdn/picture/${auth.profile}",
+                        width: 150.0,
+                        height: 150.0,
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace stackTrace) {
+                          return Image.asset(
+                            'assets/images/user.png',
+                            width: 100.0,
+                            height: 100.0,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 80, left: 30),
+                      child: GestureDetector(
+                        onTap: () {
+                          print('tapped');
+                          pickImageFromGallery();
+                        },
+                        child: ClipOval(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Image.asset(
+                              'assets/images/upload.png',
+                              width: 50.0,
+                              height: 50.0,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
           ),
           Container(
             margin: EdgeInsets.all(16.0),

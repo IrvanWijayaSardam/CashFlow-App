@@ -39,18 +39,17 @@ class _HomeScreenState extends State<HomeScreen> {
       Provider.of<Transactions>(context, listen: false)
           .fetchAndSetTransactions()
           .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
+        
       });
 
       Provider.of<Reports>(context, listen: false)
           .fetchAndSetSummary()
           .then((_) {
-        setState(() {
+
+      });
+      setState(() {
           _isLoading = false;
         });
-      });
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -93,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Card(
+                    color: Color.fromARGB(255, 49, 248, 152),
                     elevation: 5.0,
                     child: Container(
                       padding: const EdgeInsets.all(20.0),
@@ -102,28 +102,38 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Consumer<Reports>(
-                            builder: (ctx, report, _) => Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Saldo',
-                                    style: TextStyle(
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.bold)),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
-                                  child: Text(
-                                    '${Utils.formatCurrency(report.dataSummary.transactionIn - report.dataSummary.transactionOut)}',
+                            builder: (ctx, report, _) {
+                              final transactionIn =
+                                  report.dataSummary?.transactionIn ?? 0;
+                              final transactionOut =
+                                  report.dataSummary?.transactionOut ?? 0;
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Saldo',
                                     style: TextStyle(
                                         fontSize: 17.0,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                                Text(
-                                    'Pemasukan : ${Utils.formatCurrency(report.dataSummary.transactionIn)}'),
-                                Text(
-                                    'Pengeluaran : ${Utils.formatCurrency(report.dataSummary.transactionOut)}'),
-                              ],
-                            ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 10.0),
+                                    child: Text(
+                                      '${Utils.formatCurrency(transactionIn - transactionOut)}',
+                                      style: TextStyle(
+                                          fontSize: 17.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Text(
+                                      'Pemasukan : ${Utils.formatCurrency(transactionIn ?? 0)}'),
+                                  Text(
+                                      'Pengeluaran : ${Utils.formatCurrency(transactionOut ?? 0)}'),
+                                ],
+                              );
+                            },
                           )
                         ],
                       ),

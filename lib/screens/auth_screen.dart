@@ -10,6 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthMode { Signup, Login }
 
+enum Gender { male, female }
+
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
 
@@ -18,7 +20,7 @@ class AuthScreen extends StatelessWidget {
     final deviceSize = MediaQuery.of(context).size;
     final authData = Provider.of<Auth>(context, listen: false);
 
-// Check if the user is already authenticated
+    // Check if the user is already authenticated
     authData.tryAutoLogin().then((isAuthenticated) {
       if (isAuthenticated) {
         Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
@@ -63,6 +65,7 @@ class _AuthCardState extends State<AuthCard> {
   Map<String, String> _authData = {
     'email': '',
     'password': '',
+    'gender': '',
   };
   var _isLoading = false;
   final _passwordController = TextEditingController();
@@ -117,7 +120,7 @@ class _AuthCardState extends State<AuthCard> {
     } on HttpException catch (error) {
       if (error != null) {
         if (error.toString().contains("Duplicate")) {
-          _showErrorDialog("Ooops , Email Sudah Digunakan");
+          _showErrorDialog("Ooops, Email Sudah Digunakan");
         } else if (error.toString().contains("Invalid Credential")) {
           _showErrorDialog("Email Atau Password Salah");
         } else {
@@ -147,6 +150,8 @@ class _AuthCardState extends State<AuthCard> {
 
   @override
   Widget build(BuildContext context) {
+    Gender _selectedGender;
+
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
@@ -187,7 +192,6 @@ class _AuthCardState extends State<AuthCard> {
               ),
               if (_authMode == AuthMode.Signup)
                 TextFormField(
-                  enabled: _authMode == AuthMode.Signup,
                   decoration: InputDecoration(labelText: 'Confirm Password'),
                   obscureText: true,
                   validator: _authMode == AuthMode.Signup
@@ -201,7 +205,6 @@ class _AuthCardState extends State<AuthCard> {
                 ),
               if (_authMode == AuthMode.Signup)
                 TextFormField(
-                  enabled: _authMode == AuthMode.Signup,
                   decoration: InputDecoration(labelText: 'Full Name'),
                   onSaved: (value) {
                     _authData['name'] = value;
@@ -209,28 +212,52 @@ class _AuthCardState extends State<AuthCard> {
                 ),
               if (_authMode == AuthMode.Signup)
                 TextFormField(
-                  enabled: _authMode == AuthMode.Signup,
                   decoration: InputDecoration(labelText: 'Phone Number'),
+                  keyboardType: TextInputType.phone,
                   onSaved: (value) {
                     _authData['telp'] = value;
                   },
                 ),
               if (_authMode == AuthMode.Signup)
                 TextFormField(
-                  enabled: _authMode == AuthMode.Signup,
                   decoration: InputDecoration(labelText: 'Pin'),
                   obscureText: true,
+                  keyboardType: TextInputType.number,
                   onSaved: (value) {
                     _authData['pin'] = value;
                   },
                 ),
               if (_authMode == AuthMode.Signup)
-                TextFormField(
-                  enabled: _authMode == AuthMode.Signup,
-                  decoration: InputDecoration(labelText: 'Gender'),
-                  onSaved: (value) {
-                    _authData['gender'] = value;
-                  },
+                Row(
+                  children: [
+                    Text('Gender'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Radio(
+                          value: "Male",
+                          groupValue: _authData['gender'],
+                          onChanged: (value) {
+                            setState(() {
+                              _authData['gender'] = value;
+                            });
+                          },
+                        ),
+                        Text('MALE'),
+                        SizedBox(width: 20),
+                        Radio(
+                          value: "Female",
+                          groupValue: _authData['gender'],
+                          onChanged: (value) {
+                            setState(() {
+                              _authData['gender'] = value;
+                            });
+                          },
+                        ),
+                        Text('Female'),
+                      ],
+                    ),
+                  ],
                 ),
               SizedBox(height: 20),
               if (_isLoading)

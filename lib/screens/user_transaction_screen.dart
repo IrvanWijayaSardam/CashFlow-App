@@ -2,6 +2,8 @@ import 'package:cashflow/providers/transactions.dart';
 import 'package:cashflow/screens/edit_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/foundation.dart';
+
 import '../providers/auth.dart';
 import '../widgets/user_treansaction_item.dart';
 
@@ -18,7 +20,9 @@ class UserTransactionsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final trxData = Provider.of<Transactions>(context);
-
+    if (kDebugMode) {
+      print('rebuilding...');
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Transactions'),
