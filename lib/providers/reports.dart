@@ -23,7 +23,7 @@ class Reports with ChangeNotifier {
   }
 
   Future<void> fetchAndSetReports() async {
-    var url = Uri.parse('http://157.245.55.214:8001/api/report');
+    var url = Uri.parse('https://cashflow-production-f95f.up.railway.app/api/report');
     try {
       final response = await http.get(
         url,
@@ -54,7 +54,7 @@ class Reports with ChangeNotifier {
   }
 
   Future<void> fetchAndSetSummary() async {
-    var url = Uri.parse('http://157.245.55.214:8001/api/report/summary');
+    var url = Uri.parse('https://cashflow-production-f95f.up.railway.app/api/report/summary');
     try {
       final response = await http.get(
         url,

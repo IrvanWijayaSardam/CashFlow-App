@@ -125,7 +125,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> _authenticate(String email, String password) async {
-    final url = Uri.parse('http://157.245.55.214:8001/api/auth/login');
+    final url = Uri.parse('https://cashflow-production-f95f.up.railway.app/api/auth/login');
     try {
       final response = await http.post(
         url,
@@ -188,7 +188,7 @@ class Auth with ChangeNotifier {
 
   Future<void> _createAccount(String name, String email, String password,
       String profile, String telp, String pin, String jk) async {
-    final url = Uri.parse('http://157.245.55.214:8001/api/auth/register');
+    final url = Uri.parse('https://cashflow-production-f95f.up.railway.app/api/auth/register');
     try {
       final response = await http.post(
         url,
@@ -249,7 +249,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> _updateAccount(Profile newProfile) async {
-    final url = Uri.parse('http://157.245.55.214:8001/api/user/profile');
+    final url = Uri.parse('https://cashflow-production-f95f.up.railway.app/api/user/profile');
     try {
       final response = await http.put(
         url,
@@ -312,7 +312,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> _uploadProfilePicture(File file) async {
-    final url = Uri.parse('http://157.245.55.214:8001/api/user/picture');
+    final url = Uri.parse('https://cashflow-production-f95f.up.railway.app/api/user/picture');
     try {
       final request = http.MultipartRequest('POST', url);
 
