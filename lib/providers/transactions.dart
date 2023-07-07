@@ -24,7 +24,7 @@ class Transactions with ChangeNotifier {
   }
 
   Future<void> fetchAndSetTransactions() async {
-    var url = Uri.parse('http://157.245.55.214:8001/api/transaction');
+    var url = Uri.parse('https://cashflow-production-f95f.up.railway.app/api/transaction');
     try {
       final response = await http.get(
         url,
@@ -52,13 +52,14 @@ class Transactions with ChangeNotifier {
       _items = loadedTransactions;
       notifyListeners();
     } catch (error) {
+      print(error.toString());
       throw error;
     }
   }
 
   Future<void> _createTransaksi(String transactionType, String date,
       int trxValue, String description, String trxGroup) async {
-    final url = Uri.parse('http://157.245.55.214:8001/api/transaction/');
+    final url = Uri.parse('https://cashflow-production-f95f.up.railway.app/api/transaction/');
     try {
       final response = await http.post(
         url,
@@ -101,7 +102,7 @@ class Transactions with ChangeNotifier {
   Future<void> _updateTransaction(int id, Transaction newTransaction) async {
     final trxIndex = _items.indexWhere((prod) => prod.id == id);
     if (trxIndex >= 0) {
-      final url = Uri.parse('http://157.245.55.214:8001/api/transaction/');
+      final url = Uri.parse('https://cashflow-production-f95f.up.railway.app/api/transaction/');
       try {
         final response = await http.put(
           url,
@@ -144,7 +145,7 @@ class Transactions with ChangeNotifier {
   }
 
   Future<void> _deleteTransactions(int id) async {
-    final url = Uri.parse('http://157.245.55.214:8001/api/transaction/$id');
+    final url = Uri.parse('https://cashflow-production-f95f.up.railway.app/api/transaction/$id');
     final existingTrxIndex = _items.indexWhere((trx) => trx.id == id);
     var existingTrx = _items[existingTrxIndex];
     _items.removeAt(existingTrxIndex);
